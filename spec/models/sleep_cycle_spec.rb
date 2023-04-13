@@ -13,8 +13,10 @@ RSpec.describe SleepCycle, type: :model do
 
   context 'scopes' do
     before do
-      @active_cycle = FactoryBot.create(:sleep_cycle, :active)
-      @inactive_cycle = FactoryBot.create(:sleep_cycle, :inactive)
+      @latest_created = FactoryBot.create(:sleep_cycle, :active)
+      travel_to Time.now - 1.day do
+        @previous_created = FactoryBot.create(:sleep_cycle, :inactive)
+      end
     end
 
     describe '.active' do
@@ -24,8 +26,8 @@ RSpec.describe SleepCycle, type: :model do
 
       it 'returns only active sleep cycles' do
         ids = subject.pluck(:id)
-        expect(ids).to include(@active_cycle.id)
-        expect(ids).not_to include(@inactive_cycle.id)
+        expect(ids).to include(@latest_created.id)
+        expect(ids).not_to include(@previous_created.id)
       end
     end
 
@@ -36,8 +38,18 @@ RSpec.describe SleepCycle, type: :model do
 
       it 'returns only inactive sleep cycles' do
         ids = subject.pluck(:id)
-        expect(ids).to include(@inactive_cycle.id)
-        expect(ids).not_to include(@active_cycle.id)
+        expect(ids).to include(@previous_created.id)
+        expect(ids).not_to include(@latest_created.id)
+      end
+    end
+
+    describe '.latest' do
+      let(:subject) { described_class.latest }
+
+      it { expect(described_class.respond_to?(:latest)).to be_truthy }
+
+      it 'returns sleep cycle records order from the latest created' do
+        expect(subject.map(&:id)).to match_array([@latest_created.id, @previous_created.id])
       end
     end
   end
