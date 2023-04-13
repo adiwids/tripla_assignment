@@ -6,4 +6,8 @@ RSpec.describe User, type: :model do
   context 'validation' do
     it { is_expected.to validate_presence_of(:name) }
   end
+
+  context 'association' do
+    it { is_expected.to have_many(:sleep_cycles).dependent(:destroy) }
+  end
 end
