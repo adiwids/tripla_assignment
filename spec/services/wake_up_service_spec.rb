@@ -30,6 +30,29 @@ RSpec.describe WakeUpService, type: :service do
           object.reload
           expect(object).to be_inactive
         end
+
+        context 'with different timezone with server' do
+          let(:now_utc) do
+            allow(Time).to receive(:now).and_return(Time.new.in_time_zone('UTC'))
+
+            Time.now
+          end
+          let(:now_jakarta) do
+            allow(Time).to receive(:now).and_return(Time.new.in_time_zone('Asia/Jakarta'))
+
+            Time.now
+          end
+          let(:actual_wake_up_time) { now_jakarta + 8.hours }
+
+          it 'saves set wake up time in UTC' do
+            expected_wake_up_time = now_utc + 8.hours
+            travel_to now_jakarta do
+              subject
+              object.reload
+              expect(object.actual_wake_up_time.to_datetime.to_fs(:db)).to eq(expected_wake_up_time.to_datetime.to_fs(:db))
+            end
+          end
+        end
       end
 
       context 'with wake up time less than cycle date' do

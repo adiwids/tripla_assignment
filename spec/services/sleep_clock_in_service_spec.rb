@@ -4,7 +4,7 @@ RSpec.describe SleepClockInService, type: :service do
   describe '.call' do
     let(:subject) { described_class.call(user: user, set_wake_up_time: set_wake_up_time) }
     let(:user) { FactoryBot.create(:user) }
-    let(:set_wake_up_time) { Time.now + 6.hours }
+    let(:set_wake_up_time) { Time.zone.now + 6.hours }
 
     it 'returns service instance' do
       expect(subject).to be_an_instance_of(described_class)
@@ -39,6 +39,29 @@ RSpec.describe SleepClockInService, type: :service do
         expect(subject.object).not_to be_persisted
         expect(subject.object.errors.key?(:set_wake_up_time)).to be_truthy
         expect(subject.object.errors.full_messages.first).to match(/can't be blank/)
+      end
+    end
+
+    context 'with different timezone with server' do
+      let(:now_utc) do
+        allow(Time).to receive(:now).and_return(Time.new.in_time_zone('UTC'))
+
+        Time.now
+      end
+      let(:now_jakarta) do
+        allow(Time).to receive(:now).and_return(Time.new.in_time_zone('Asia/Jakarta'))
+
+        Time.now
+      end
+      let(:set_wake_up_time) { now_jakarta + 8.hours }
+
+      it 'saves set wake up time in UTC' do
+        expected_wake_up_time = now_utc + 8.hours
+        travel_to now_jakarta do
+          subject
+          object = SleepCycle.last
+          expect(object.set_wake_up_time.to_datetime.to_fs(:db)).to eq(expected_wake_up_time.to_datetime.to_fs(:db))
+        end
       end
     end
   end
