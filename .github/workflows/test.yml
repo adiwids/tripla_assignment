@@ -17,5 +17,7 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
+    - name: Prepare test
+      run: bundle exec rails db:create db:migrate RAILS_ENV=test
     - name: Run tests
       run: bundle exec rspec
