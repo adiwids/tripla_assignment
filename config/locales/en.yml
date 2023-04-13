@@ -31,3 +31,10 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    errors:
+      models:
+        sleep_cycle:
+          attributes:
+            actual_wake_up_time:
+              must_be_equal_to_or_greater_than_date: must be equal to or advance from date
