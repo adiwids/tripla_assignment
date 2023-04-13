@@ -17,9 +17,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_12_080057) do
     t.datetime "set_wake_up_time"
     t.datetime "actual_wake_up_time"
     t.integer "duration_miliseconds"
+    t.integer "status", limit: 1, default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["date"], name: "index_sleep_cycles_on_date"
+    t.index ["status"], name: "index_sleep_cycles_on_status"
     t.index ["user_id"], name: "index_sleep_cycles_on_user_id"
   end
 
