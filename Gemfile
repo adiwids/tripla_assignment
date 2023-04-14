@@ -75,3 +75,4 @@ group :test do
 end
 
 gem "json-jwt", "~> 1.16"
+gem "jsonapi-serializer", "~> 2.2"
