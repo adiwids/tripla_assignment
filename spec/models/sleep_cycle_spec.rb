@@ -48,7 +48,7 @@ RSpec.describe SleepCycle, type: :model do
 
       it { expect(described_class.respond_to?(:latest)).to be_truthy }
 
-      it 'returns sleep cycle records order from the latest created' do
+      it 'returns sleep cycles ordered from the latest created' do
         expect(subject.map(&:id)).to match_array([@latest_created.id, @previous_created.id])
       end
     end
@@ -60,7 +60,7 @@ RSpec.describe SleepCycle, type: :model do
         @empty_inactive = FactoryBot.create(:sleep_cycle, :empty_inactive)
       end
 
-      it 'returns only inactive sleep cycles history with actual wake up time' do
+      it 'returns only inactive sleep cycles with actual wake up time' do
         ids = subject.map(&:id)
         expect(ids.size).to eq(1)
         expect(ids).to include(@previous_created.id)
