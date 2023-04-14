@@ -15,16 +15,28 @@ rails new . --database=sqlite3 --javascript=webpack --css=bootstrap --skip-test 
 
 **Prepare for Development/Testing**
 
-_Development Master Key_
+_Master Key_
 ```
 a8c7cf7a96525ead70b37e51679cbb8b
+```
+
+_Development Key_
+```
+7ce997a0e3ac9e8cfc742b63d370713b
+```
+
+_Test Key_
+```
+4a4cb881d2e4ee19bd61099684806227
 ```
 
 1. `git clone git@github.com:adiwids/tripla_assignment.git`
 2. `cd tripla_assignment`
 3. `touch config/master.key && echo "a8c7cf7a96525ead70b37e51679cbb8b" > config/master.key`
-3. `bundle install && yarn install`
-4. `bundle exec rails db:setup`
+4. `touch config/credentials/development.key && echo "7ce997a0e3ac9e8cfc742b63d370713b" > config/credentials/development.key`
+5. `touch config/credentials/test.key && echo "4a4cb881d2e4ee19bd61099684806227" > config/credentials/test.key`
+6. `bundle install && yarn install`
+7. `bundle exec rails db:setup`
 
 **Run Tests**
 

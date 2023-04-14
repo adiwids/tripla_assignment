@@ -6,8 +6,8 @@ class AuthenticateTokenService
   end
 
   def initialize
-    @private_key = OpenSSL::PKey::RSA.new rails_credentials[:jwt_private_key]
-    @public_key = OpenSSL::PKey::RSA.new rails_credentials[:jwt_public_key]
+    @private_key = OpenSSL::PKey::RSA.new Rails.application.credentials[:jwt_private_key]
+    @public_key = OpenSSL::PKey::RSA.new Rails.application.credentials[:jwt_public_key]
   end
 
   def authenticate!(token)
@@ -23,10 +23,6 @@ class AuthenticateTokenService
   end
 
   private
-
-  def rails_credentials
-    Rails.application.credentials[Rails.env.to_sym]
-  end
 
   def decode_token(token)
     jwe = JSON::JWT.decode(token, private_key)

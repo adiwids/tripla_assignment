@@ -5,7 +5,7 @@ namespace :user do
   task :generate_token, [:user_id] => [:environment] do |t, args|
     user = User.find(args.user_id.to_i)
     data = { uid: user.id, nm: user.name }
-    public_key = OpenSSL::PKey::RSA.new Rails.application.credentials[Rails.env.to_sym][:jwt_public_key]
+    public_key = OpenSSL::PKey::RSA.new Rails.application.credentials[:jwt_public_key]
     jwt = JSON::JWT.new(data)
     jwe = jwt.encrypt(public_key)
     puts jwe.to_s
