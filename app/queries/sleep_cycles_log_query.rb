@@ -12,6 +12,7 @@ class SleepCyclesLogQuery
 
   def fetch(filters: {})
     query = filters[:only_completed] ? collection.completed : collection
+    query = query.reorder(order_by(filters)) if filters[:order_by]
     owner_sleep_cycles = query.distinct.where(sleep_cycles: { user_id: owner.id })
 
     query = if filters[:include_followings]
@@ -34,5 +35,15 @@ class SleepCyclesLogQuery
         ON followed_users.followed_id = sleep_cycles.user_id
           OR followed_users.follower_id = sleep_cycles.user_id
     SQL
+  end
+
+  def order_by(filters)
+    column, direction = filters[:order_by].to_s.split(/\s/, 2)
+    case column
+    when 'duration'
+      "sleep_cycles.duration_miliseconds #{direction}"
+    else
+      'sleep_cycles.id asc'
+    end
   end
 end

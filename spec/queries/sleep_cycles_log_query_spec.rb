@@ -75,5 +75,22 @@ RSpec.describe SleepCyclesLogQuery do
         expect(ordered_ids).to match_array(expected_ids)
       end
     end
+
+    context "when fetching owned sleep cycles including followed users's history ordered by duration" do
+      let(:filters) { { include_followings: true, only_completed: true, order_by: 'duration desc' } }
+
+      it "returns current owner's sleep cycles and followed user's history ordered descendingly by sleep duration" do
+        ordered_ids = subject.map(&:id)
+        expected_ids = [
+          @jerry_completed1,
+          @owner_completed2,
+          @owner_completed1
+        ].sort_by { |cycle| cycle.duration_miliseconds }
+         .reverse
+         .map(&:id)
+
+        expect(ordered_ids).to match_array(expected_ids)
+      end
+    end
   end
 end
