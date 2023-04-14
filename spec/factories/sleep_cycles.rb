@@ -12,8 +12,12 @@ FactoryBot.define do
       status { :active }
     end
 
-    trait :waken_up do
+    trait :empty_inactive do
       status { :inactive }
+    end
+
+    trait :waken_up do
+      empty_inactive
       actual_wake_up_time { Time.zone.now + 7.hours }
     end
 

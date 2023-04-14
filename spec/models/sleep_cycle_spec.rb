@@ -52,5 +52,20 @@ RSpec.describe SleepCycle, type: :model do
         expect(subject.map(&:id)).to match_array([@latest_created.id, @previous_created.id])
       end
     end
+
+    describe '.completed' do
+      let(:subject) { described_class.completed }
+
+      before do
+        @empty_inactive = FactoryBot.create(:sleep_cycle, :empty_inactive)
+      end
+
+      it 'returns only inactive sleep cycles history with actual wake up time' do
+        ids = subject.map(&:id)
+        expect(ids.size).to eq(1)
+        expect(ids).to include(@previous_created.id)
+        expect(ids).not_to include(@empty_inactive.id)
+      end
+    end
   end
 end
