@@ -73,3 +73,5 @@ group :test do
   gem "database_cleaner", "~> 2.0"
   gem "shoulda-matchers", "~> 5.3"
 end
+
+gem "json-jwt", "~> 1.16"
