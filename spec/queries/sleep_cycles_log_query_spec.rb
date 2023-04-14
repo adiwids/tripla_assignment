@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe SleepCyclesHistoryQuery do
+RSpec.describe SleepCyclesLogQuery do
   before(:all) do
     @owner = FactoryBot.create(:user)
     @tom = FactoryBot.create(:tom)
@@ -34,10 +34,11 @@ RSpec.describe SleepCyclesHistoryQuery do
     let(:owner) { @owner }
     let(:filters) { {} }
 
-    context 'when fetching only owned history' do
-      it "returns current owner's completed sleep cycles history ordered descendingly by creation time" do
+    context 'when fetching only owned sleep cycles log' do
+      it "returns current owner's completed sleep cycles log ordered descendingly by creation time" do
         ordered_ids = subject.map(&:id)
         expected_ids = [
+          @owner_ongoing.id,
           @owner_completed2.id,
           @owner_completed1.id
         ]
@@ -45,10 +46,26 @@ RSpec.describe SleepCyclesHistoryQuery do
       end
     end
 
-    context "when fetching owned including it's followed users's history" do
+    context "when fetching owned including it's followed users's log" do
       let(:filters) { { include_followings: true } }
 
-      it "returns current owner's completed sleep cycles and followed user's history ordered descendingly by creation time" do
+      it "returns current owner's sleep cycles and followed user's log ordered descendingly by creation time" do
+        ordered_ids = subject.map(&:id)
+        expected_ids = [
+          @jerry_ongoing.id,
+          @owner_ongoing.id,
+          @jerry_completed1.id,
+          @owner_completed2.id,
+          @owner_completed1.id
+        ]
+        expect(ordered_ids).to match_array(expected_ids)
+      end
+    end
+
+    context "when fetching owned sleep cycles including followed users's history" do
+      let(:filters) { { include_followings: true, only_completed: true } }
+
+      it "returns current owner's sleep cycles and followed user's history ordered descendingly by creation time" do
         ordered_ids = subject.map(&:id)
         expected_ids = [
           @jerry_completed1.id,

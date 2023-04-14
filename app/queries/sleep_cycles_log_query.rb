@@ -1,4 +1,4 @@
-class SleepCyclesHistoryQuery
+class SleepCyclesLogQuery
   attr_reader :owner, :collection
 
   def self.call(owner:, filters: {})
@@ -7,15 +7,18 @@ class SleepCyclesHistoryQuery
 
   def initialize(owner)
     @owner = owner
-    @collection = SleepCycle.includes(:user).completed.latest
+    @collection = SleepCycle.includes(:user).latest
   end
 
   def fetch(filters: {})
+    query = filters[:only_completed] ? collection.completed : collection
+    owner_sleep_cycles = query.distinct.where(sleep_cycles: { user_id: owner.id })
+
     query = if filters[:include_followings]
-      collection.distinct
-                .joins(followed_users_including_owner_join_sql)
+      query.distinct.joins(followed_users_including_owner_join_sql)
+                    .or(owner_sleep_cycles)
     else
-      collection.where(sleep_cycles: { user_id: owner.id })
+      owner_sleep_cycles
     end
 
     query
