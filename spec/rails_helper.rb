@@ -64,6 +64,7 @@ RSpec.configure do |config|
 
   config.include ActiveSupport::Testing::TimeHelpers
   config.include TokenTestHelper
+  config.include ApiTestHelper
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
