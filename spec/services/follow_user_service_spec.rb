@@ -34,7 +34,7 @@ RSpec.describe FollowUserService, type: :service do
     context 'with target is the same as requester' do
       let(:target_user) { user }
 
-      it { expect { subject }.to raise_error(ArgumentError) }
+      it { expect { subject }.to raise_error(described_class::SelfFollowError) }
     end
 
     context 'with not persisted requester' do

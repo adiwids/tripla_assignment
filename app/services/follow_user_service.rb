@@ -1,5 +1,7 @@
 class FollowUserService
-  attr_reader :requester, :target, :object
+  class SelfFollowError < HttpError::BadRequestError; end
+
+  attr_reader :requester, :target, :object, :new_relation
 
   def self.call(requester:, target:)
     new(requester, target).follow!
@@ -10,17 +12,23 @@ class FollowUserService
 
     @requester = requester
     @target = target
+    @new_relation = false
   end
 
   def follow!
-    raise ArgumentError.new if requester.id == target.id
+    raise SelfFollowError.new if requester.id == target.id
 
     @object = check_or_build_relation
     if object.new_record?
+      @new_relation = true
       object.approved! if @object.save && auto_approved_enabled?
     end
 
     self
+  end
+
+  def new_relation?
+    !!new_relation
   end
 
   private
