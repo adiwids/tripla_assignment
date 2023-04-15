@@ -29,6 +29,14 @@ module Api
       end
     end
 
+    def unfollow
+      UnfollowUserService.call(requester: @current_user, target: @target_user)
+
+      respond_to do |format|
+        format.json { head :no_content }
+      end
+    end
+
     private
 
     def find_target_user

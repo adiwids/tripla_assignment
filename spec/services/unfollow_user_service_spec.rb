@@ -24,7 +24,7 @@ RSpec.describe UnfollowUserService, type: :service do
       let(:subject) { described_class.call(requester: user, target: target_user) }
       let(:target_user) { FactoryBot.create(:user) }
 
-      it { expect { subject }.to raise_error(StandardError) }
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
 
     context 'with not persisted requester' do
@@ -45,10 +45,10 @@ RSpec.describe UnfollowUserService, type: :service do
 
     context 'with target same as requester' do
       let(:subject) { described_class.call(requester: user, target: target_user) }
-      let(:user) { FactoryBot.build(:user) }
+      let(:user) { FactoryBot.create(:user) }
       let(:target_user) { user }
 
-      it { expect { subject }.to raise_error(ArgumentError) }
+      it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
   end
 end

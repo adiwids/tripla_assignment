@@ -7,7 +7,6 @@ class UnfollowUserService
 
   def initialize(requester, target)
     raise ArgumentError.new unless requester&.persisted? && target&.persisted?
-    raise ArgumentError.new if requester&.id == target&.id
 
     @requester = requester
     @target = target
@@ -15,7 +14,7 @@ class UnfollowUserService
   end
 
   def unfollow!
-    raise StandardError.new unless object
+    raise ActiveRecord::RecordNotFound.new unless object
 
     object.destroy
 

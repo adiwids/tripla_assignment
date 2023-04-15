@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       resources :sleep_cycles, only: :index
       member do
         post :follow
+        delete :unfollow
       end
     end
   end

@@ -107,4 +107,73 @@ RSpec.describe "Users", type: :request do
       end
     end
   end
+
+  describe 'DELETE /api/users/{id}/unfollow' do
+    let(:subject) do
+      delete "/api/users/#{user.id}/unfollow", headers: { 'Authorization' => "Bearer #{token}", 'Accept' => 'application/json' }
+    end
+    let(:user) { FactoryBot.create(:jerry) }
+
+    context 'with authenticated access' do
+      context 'and target user already followed' do
+        before do
+          FactoryBot.create(:following, :approved, follower: current_user, followed: user)
+        end
+
+        it 'returns success response without content' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:no_content)
+            expect(response.body).to be_blank
+          end
+        end
+      end
+
+      context 'and target user not followed yet' do
+        before do
+          expect(current_user.follow_relations.where(followed_id: user.id)).to be_empty
+        end
+
+        it 'returns not found error response' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:not_found)
+            expect(json_response.keys).to match_array(%w[message])
+          end
+        end
+      end
+
+      context 'and target user not found' do
+        let(:user) { FactoryBot.build_stubbed(:user) }
+
+        it 'returns not found error response' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:not_found)
+            expect(json_response.keys).to match_array(%w[message])
+          end
+        end
+      end
+
+      context 'and target user is current user itself' do
+        let(:user) { current_user }
+
+        it 'returns not found error response' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:not_found)
+            expect(json_response.keys).to match_array(%w[message])
+          end
+        end
+      end
+    end
+
+    context 'with unauthenticated access' do
+      it 'returns error response' do
+        subject
+        expect(response).to have_http_status(:unauthorized)
+        expect(json_response.keys).to match_array(%w[message])
+      end
+    end
+  end
 end
