@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # root "articles#index"
   namespace :api do
     scope 'user' do
-      resources :sleep_cycles, only: :index
+      resources :sleep_cycles, only: %i[index create]
     end
     resources :users, only: :none do
       resources :sleep_cycles, only: :index

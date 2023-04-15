@@ -132,4 +132,113 @@ RSpec.describe "Sleep Cycles", type: :request do
       end
     end
   end
+
+  describe "POST /api/user/sleep_cycles" do
+    let(:subject) do
+      post "/api/user/sleep_cycles",
+           params: request_params,
+           headers: { 'Accept' => 'application/json',
+                      'Content-Type' => 'application/json',
+                      'Authorization' => "Bearer #{token}" }
+    end
+    let(:request_params) do
+      {
+        sleep_cycle: {
+          set_wake_up_time: set_wake_up_time
+        }
+      }.to_json
+    end
+    let(:now_jakarta) do
+      allow(Time).to receive(:now).and_return(Time.new.in_time_zone('Asia/Jakarta'))
+
+      Time.now
+    end
+    let(:set_wake_up_time) { (now_jakarta + 8.hours).iso8601 }
+
+    context 'with authenticated access' do
+      context 'no active cycle exists' do
+        it 'returns success and created sleep cycle data' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:ok)
+            data = json_response['data']
+            expect(data.keys).to match_array(%w[id type attributes relationships])
+            expect(data['type']).to eq('sleep_cycle')
+            expect(data['attributes'].keys).to match_array(%w[set_wake_up_time actual_wake_up_time duration_miliseconds status created_at])
+            expect(data['relationships'].keys).to include('user')
+          end
+        end
+      end
+
+      context 'active cycle exists' do
+        before { FactoryBot.create(:sleep_cycle, :active, user: current_user) }
+
+        it 'returns forbidden error message' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:forbidden)
+            expect(json_response.keys).to match_array(%w[message])
+          end
+        end
+      end
+
+      context 'without set wake up time parameter' do
+        let(:set_wake_up_time) { nil }
+
+        it 'returns bad request error response' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(json_response.keys).to match_array(%w[message])
+          end
+        end
+      end
+
+      context 'with empty parameter' do
+        let(:request_params) { {}.to_json }
+
+        it 'returns bad request error response' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:bad_request)
+            expect(json_response.keys).to match_array(%w[message])
+          end
+        end
+      end
+
+      context 'with different date time format' do
+        let(:set_wake_up_time) { (now_jakarta + 8.hours).rfc3339 }
+
+        it 'returns success response and save wake up time in UTC with ISO8601 format' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:ok)
+            data = json_response['data']
+            expect(data['attributes']['set_wake_up_time']).to eq(DateTime.parse(set_wake_up_time).in_time_zone('UTC').iso8601(3))
+          end
+        end
+      end
+
+      context 'with non-standard date time format' do
+        let(:set_wake_up_time) { (now_jakarta + 8.hours).strftime('%F %T') }
+
+        it 'returns success response and save wake up time in UTC with ISO8601 format' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:ok)
+            data = json_response['data']
+            expect(data['attributes']['set_wake_up_time']).to eq(DateTime.parse(set_wake_up_time).in_time_zone('UTC').iso8601(3))
+          end
+        end
+      end
+    end
+
+    context 'with unauthorized access' do
+      it 'returns error response' do
+        subject
+        expect(response).to have_http_status(:unauthorized)
+        expect(json_response.keys).to match_array(%w[message])
+      end
+    end
+  end
 end

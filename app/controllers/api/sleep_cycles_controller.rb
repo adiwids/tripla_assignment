@@ -10,6 +10,21 @@ module Api
       end
     end
 
+    def create
+      service = SleepClockInService.call(user: @current_user, set_wake_up_time: create_params[:set_wake_up_time])
+      @sleep_cycle = service.object
+
+      respond_to do |format|
+        format.json do
+          if @sleep_cycle.errors.empty?
+            render json: SleepCycleSerializer.new(@sleep_cycle)
+          else
+            render json: { message: @sleep_cycle.errors.full_messages.first }, status: :unprocessable_entity
+          end
+        end
+      end
+    end
+
     private
 
     def owner
@@ -20,6 +35,10 @@ module Api
 
     def index_params
       params.permit(:include_followings, :only_completed, :order_by)
+    end
+
+    def create_params
+      params.require(:sleep_cycle).permit(:set_wake_up_time)
     end
   end
 end
