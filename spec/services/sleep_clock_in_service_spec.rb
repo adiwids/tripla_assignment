@@ -21,7 +21,7 @@ RSpec.describe SleepClockInService, type: :service do
       context 'when another active sleep cycle exist' do
         before { FactoryBot.create(:sleep_cycle, :active, user: user) }
 
-        it { expect { subject }.to raise_error(StandardError) }
+        it { expect { subject }.to raise_error(described_class::RunningCycleError) }
       end
     end
 
