@@ -11,6 +11,9 @@ Rails.application.routes.draw do
     end
     resources :users, only: :index do
       resources :sleep_cycles, only: :index
+      member do
+        post :follow
+      end
     end
   end
 end
