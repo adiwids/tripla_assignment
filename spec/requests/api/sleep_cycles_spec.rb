@@ -95,7 +95,6 @@ RSpec.describe "Sleep Cycles", type: :request do
           stub_authenticated_token(token, current_user) do
             subject
             expect(response).to have_http_status(:ok)
-            puts json_response.pretty_inspect
             data = json_response['data']
             expect(data.size).to eq(2)
           end
