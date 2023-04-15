@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     scope 'user' do
       resources :sleep_cycles, only: :index
     end
-    resources :users, only: :none, param: 'user_id' do
+    resources :users, only: :none do
       resources :sleep_cycles, only: :index
     end
   end
