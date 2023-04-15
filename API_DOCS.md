@@ -139,6 +139,61 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
 }
 ```
 
+## GET /api/user/sleep_cycles?include_followings=true&only_completed=true&order_by=duration%20desc&since=2023-04-07T13:05:39.000Z
+
+_Returns completed sleep cycles of current user and it's followed users done in past week, ordered by higest duration to lower._
+
+**cURL Example Request**
+
+```
+curl --header "Authorization: Bearer {token}" --header "Accept: application/json" -X GET "http://localhost:3000/api/sleep_cycles?include_followings=true&only_completed=true&order_by=duration%20desc&since=2023-04-07T13:05:39.000Z"
+```
+
+**HTTP 200 Example Response**
+
+```
+{
+  "data": [
+    {
+      "attributes": {
+        "actual_wake_up_time": "2023-04-14T12:05:39.000Z",
+        "duration_miliseconds": 21600,
+        "set_wake_up_time": "2023-04-14T13:05:39.000Z",
+        "status": "inactive"
+      },
+      "id": "3",
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "1",
+            "type": "user"
+          }
+        }
+      },
+      "type": "sleep_cycle"
+    },
+    {
+      "attributes": {
+        "actual_wake_up_time": "2023-04-14T12:05:39.000Z",
+        "duration_miliseconds": 18000,
+        "set_wake_up_time": "2023-04-14T13:05:39.000Z",
+        "status": "inactive"
+      },
+      "id": "2",
+      "relationships": {
+        "user": {
+          "data": {
+            "id": "2",
+            "type": "user"
+          }
+        }
+      },
+      "type": "sleep_cycle"
+    }
+  ]
+}
+```
+
 ## GET /api/users/{user_id}/sleep_cycles?only_completed=true&order_by=duration%20desc
 
 _Returns completed sleep cycles of a followed user, ordered by higest duration to lower._
