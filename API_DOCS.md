@@ -364,13 +364,13 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
 
 _Follow specific user_
 
-** cURL Request Example**
+**cURL Request Example**
 
 ```
-curl --header "Authorization: Bearer {token}" --header "Accept: application/json" --header "Content-Type: application/json" --data "" -X POST "http://localhost:3000/api/users/2/follow"
+curl --header "Authorization: Bearer {token}" --header "Accept: application/json" -X POST "http://localhost:3000/api/users/2/follow"
 ```
 
-** HTTP 200 Response Example**
+**HTTP 200 Response Example**
 
 ```
 {
@@ -399,3 +399,17 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
   }
 }
 ```
+
+## DELETE /api/users/{user_id}/unfollow
+
+_Unfollow followed user_
+
+**cURL Request Example**
+
+```
+curl --header "Authorization: Bearer {token}" --header "Accept: application/json" -X DELETE "http://localhost:3000/api/users/2/unfollow"
+```
+
+**HTTP 204 Response**
+
+_no content_
