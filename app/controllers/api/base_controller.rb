@@ -1,5 +1,7 @@
 module Api
   class BaseController < ActionController::Base
+    include Api::ExceptionHandler
+
     before_action :authenticate_token!
 
     private
