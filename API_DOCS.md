@@ -322,3 +322,40 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
   }
 }
 ```
+
+## GET /api/users
+
+_Returns users except current user._
+
+**cURL Example Request**
+
+```
+curl --header "Authorization: Bearer {token}" --header "Accept: application/json" -X GET "http://localhost:3000/api/users"
+```
+
+**HTTP 200 Example Response**
+
+```
+{
+  "data": [
+    {
+      "attributes": {
+        "name": "Tom",
+        "is_followed": true,
+        "is_following": false
+      },
+      "id": "5",
+      "type": "user"
+    },
+    {
+      "attributes": {
+        "name": "Bella",
+        "is_followed": false,
+        "is_following": false
+      },
+      "id": "4",
+      "type": "sleep_cycle"
+    }
+  ]
+}
+```
