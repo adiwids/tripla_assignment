@@ -286,3 +286,39 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
   }
 }
 ```
+
+## PUT /api/user/sleep_cycles
+
+_Set actual wake up time to latest active sleep cycle and calculate sleep duration._
+
+** cURL Request Example**
+
+```
+curl --header "Authorization: Bearer {token}" --header "Accept: application/json" --header "Content-Type: application/json" --data "{sleep_cycle:{actual_wake_up_time:\"2023-04-23T14:52:27.000Z\"}}" -X PUT "http://localhost:3000/api/user/sleep_cycles"
+```
+
+** HTTP 200 Response Example**
+
+```
+{
+  "data": {
+    "attributes": {
+      "actual_wake_up_time": "2023-04-15T14:52:27.000Z",
+      "created_at": "2023-04-15T06:52:27.074Z",
+      "duration_miliseconds": 218000,
+      "set_wake_up_time": "2023-04-15T14:52:27.000Z",
+      "status": "inactive"
+    },
+    "id": "1",
+    "relationships": {
+      "user": {
+        "data": {
+          "id": "1",
+          "type": "user"
+        }
+      }
+    },
+    "type": "sleep_cycle"
+  }
+}
+```
