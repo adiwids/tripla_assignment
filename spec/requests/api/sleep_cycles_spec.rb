@@ -205,7 +205,7 @@ RSpec.describe "Sleep Cycles", type: :request do
       context 'without set wake up time parameter' do
         let(:set_wake_up_time) { nil }
 
-        it 'returns bad request error response' do
+        it 'returns unprocessable entity error response' do
           stub_authenticated_token(token, current_user) do
             subject
             expect(response).to have_http_status(:unprocessable_entity)
@@ -249,6 +249,99 @@ RSpec.describe "Sleep Cycles", type: :request do
             data = json_response['data']
             expect(data['attributes']['set_wake_up_time']).to eq(DateTime.parse(set_wake_up_time).in_time_zone('UTC').iso8601(3))
           end
+        end
+      end
+    end
+
+    context 'with unauthorized access' do
+      it 'returns error response' do
+        subject
+        expect(response).to have_http_status(:unauthorized)
+        expect(json_response.keys).to match_array(%w[message])
+      end
+    end
+  end
+
+  describe "PUT /api/user/sleep_cycles" do
+    let(:subject) do
+      put "/api/user/sleep_cycles",
+          params: request_params,
+          headers: { 'Accept' => 'application/json',
+                     'Content-Type' => 'application/json',
+                     'Authorization' => "Bearer #{token}" }
+    end
+    let(:request_params) do
+      {
+        sleep_cycle: {
+          actual_wake_up_time: actual_wake_up_time
+        }
+      }.to_json
+    end
+    let(:now_jakarta) do
+      allow(Time).to receive(:now).and_return(Time.new.in_time_zone('Asia/Jakarta'))
+
+      Time.now
+    end
+    let(:actual_wake_up_time) { (now_jakarta + 8.hours).iso8601 }
+
+    context 'with authenticated access' do
+      context 'active cycle exists' do
+        before { FactoryBot.create(:sleep_cycle, :active, user: current_user) }
+
+        it 'returns success response and completed cycle data' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:ok)
+            data = json_response['data']
+            expect(data.keys).to match_array(%w[id type attributes relationships])
+            expect(data['type']).to eq('sleep_cycle')
+            expect(data['attributes'].keys).to match_array(%w[set_wake_up_time actual_wake_up_time duration_miliseconds status created_at])
+            expect(data['relationships'].keys).to include('user')
+            expect(data['attributes']['actual_wake_up_time']).to eq(DateTime.parse(actual_wake_up_time).in_time_zone('UTC').iso8601(3))
+            expect(data['attributes']['duration_miliseconds']).not_to be_zero
+          end
+        end
+      end
+
+      context 'no active cycle exists' do
+        before do
+          expect(current_user.sleep_cycles.active).to be_empty
+        end
+
+        it 'returns not found error message' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:not_found)
+            expect(json_response.keys).to match_array(%w[message])
+          end
+        end
+      end
+    end
+
+    context 'with invalid wake up time parameter' do
+      let(:actual_wake_up_time) { Time.zone.yesterday.iso8601 }
+
+      before { FactoryBot.create(:sleep_cycle, :active, user: current_user) }
+
+      it 'returns unprocessable entity error response' do
+        stub_authenticated_token(token, current_user) do
+          subject
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json_response.keys).to match_array(%w[message])
+        end
+      end
+    end
+
+    context 'with empty parameter' do
+      let(:request_params) { {}.to_json }
+
+      before { FactoryBot.create(:sleep_cycle, :active, user: current_user) }
+
+      it 'returns bad request error response' do
+        stub_authenticated_token(token, current_user) do
+          subject
+          expect(response).to have_http_status(:bad_request)
+          expect(json_response.keys).to match_array(%w[message])
         end
       end
     end

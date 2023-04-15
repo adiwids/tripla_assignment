@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   # root "articles#index"
   namespace :api do
     scope 'user' do
-      resources :sleep_cycles, only: %i[index create]
+      resources :sleep_cycles, only: %i[index create] do
+        put '/', to: 'sleep_cycles#update', on: :collection
+      end
     end
     resources :users, only: :none do
       resources :sleep_cycles, only: :index

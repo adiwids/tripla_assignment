@@ -25,6 +25,21 @@ module Api
       end
     end
 
+    def update
+      service = WakeUpService.call(user: @current_user, actual_wake_up_time: update_params[:actual_wake_up_time])
+      @sleep_cycle = service.object
+
+      respond_to do |format|
+        format.json do
+          if @sleep_cycle.errors.empty?
+            render json: SleepCycleSerializer.new(@sleep_cycle)
+          else
+            render json: { message: @sleep_cycle.errors.full_messages.first }, status: :unprocessable_entity
+          end
+        end
+      end
+    end
+
     private
 
     def owner
@@ -39,6 +54,10 @@ module Api
 
     def create_params
       params.require(:sleep_cycle).permit(:set_wake_up_time)
+    end
+
+    def update_params
+      params.require(:sleep_cycle).permit(:actual_wake_up_time)
     end
   end
 end
