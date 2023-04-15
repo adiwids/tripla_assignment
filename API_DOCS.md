@@ -359,3 +359,43 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
   ]
 }
 ```
+
+## POST /api/users/{user_id}/follow
+
+_Follow specific user_
+
+** cURL Request Example**
+
+```
+curl --header "Authorization: Bearer {token}" --header "Accept: application/json" --header "Content-Type: application/json" --data "" -X POST "http://localhost:3000/api/users/2/follow"
+```
+
+** HTTP 200 Response Example**
+
+```
+{
+  "data": {
+    "attributes": {
+      "created_at": "2023-04-15T10:39:19.217Z",
+      "status": "approved",
+      "updated_at": "2023-04-15T10:39:19.224Z"
+    },
+    "id": "1",
+    "relationships": {
+      "followed": {
+        "data": {
+          "id": "2",
+          "type": "user"
+        }
+      },
+      "follower": {
+        "data": {
+          "id": "1",
+          "type": "user"
+        }
+      }
+    },
+    "type": "following"
+  }
+}
+```
