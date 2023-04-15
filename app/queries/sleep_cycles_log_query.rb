@@ -22,6 +22,8 @@ class SleepCyclesLogQuery
       owner_sleep_cycles
     end
 
+    query = query.where('sleep_cycles.created_at >= ?', filters[:since]) if filters[:since]
+
     query
   end
 

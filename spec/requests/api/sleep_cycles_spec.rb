@@ -12,6 +12,9 @@ RSpec.describe "Sleep Cycles", type: :request do
 
     before do
       FactoryBot.create(:following, :approved, follower: current_user, followed: jerry)
+      travel_to Time.zone.now - 10.days do
+        FactoryBot.create(:sleep_cycle, :waken_up, user: current_user)
+      end
       travel_to Time.zone.now - 1.day do
         # someone-else sleep cycle
         FactoryBot.create(:sleep_cycle, :waken_up)
@@ -33,7 +36,7 @@ RSpec.describe "Sleep Cycles", type: :request do
             subject
             expect(response).to have_http_status(:ok)
             data = json_response['data']
-            expect(data.size).to eq(3)
+            expect(data.size).to eq(4)
             expect(data.first.keys).to match_array(%w[id type attributes relationships])
             expect(data.first['type']).to eq('sleep_cycle')
             expect(data.first['attributes'].keys).to match_array(%w[set_wake_up_time actual_wake_up_time duration_miliseconds status created_at])
@@ -54,7 +57,24 @@ RSpec.describe "Sleep Cycles", type: :request do
             subject
             expect(response).to have_http_status(:ok)
             data = json_response['data']
-            expect(data.size).to eq(2)
+            expect(data.size).to eq(3)
+          end
+        end
+      end
+
+      context "fetching current user and it's followed users's sleep cycles history ranked by duration since past week" do
+        let(:subject) do
+          get "/api/user/sleep_cycles",
+              params: { only_completed: true, include_followings: true, order_by: 'duration desc', since: (Time.zone.now - 7.days).iso8601 },
+              headers: { 'Accept' => 'application/json', 'Authorization' => "Bearer #{token}" }
+        end
+
+        it "returns current user and followed user's sleep cycles completed log" do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:ok)
+            data = json_response['data']
+            expect(data.size).to eq(3)
           end
         end
       end

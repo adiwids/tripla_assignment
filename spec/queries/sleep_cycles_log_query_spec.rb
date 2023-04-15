@@ -12,6 +12,10 @@ RSpec.describe SleepCyclesLogQuery do
     FactoryBot.create(:following, :requested, follower: @owner, followed: @bella)
 
     # all users's sleep cycles
+    travel_to Time.zone.now - 10.days do
+      @owner_completed0 = FactoryBot.create(:sleep_cycle, :waken_up, user: @owner)
+    end
+
     travel_to Time.zone.now - 2.days do
       @owner_completed1 = FactoryBot.create(:sleep_cycle, :waken_up, user: @owner)
       @tom_completed1 = FactoryBot.create(:sleep_cycle, :waken_up, user: @tom)
@@ -40,7 +44,8 @@ RSpec.describe SleepCyclesLogQuery do
         expected_ids = [
           @owner_ongoing.id,
           @owner_completed2.id,
-          @owner_completed1.id
+          @owner_completed1.id,
+          @owner_completed0.id
         ]
         expect(ordered_ids).to match_array(expected_ids)
       end
@@ -56,7 +61,8 @@ RSpec.describe SleepCyclesLogQuery do
           @owner_ongoing.id,
           @jerry_completed1.id,
           @owner_completed2.id,
-          @owner_completed1.id
+          @owner_completed1.id,
+          @owner_completed0.id
         ]
         expect(ordered_ids).to match_array(expected_ids)
       end
@@ -70,7 +76,8 @@ RSpec.describe SleepCyclesLogQuery do
         expected_ids = [
           @jerry_completed1.id,
           @owner_completed2.id,
-          @owner_completed1.id
+          @owner_completed1.id,
+          @owner_completed0.id
         ]
         expect(ordered_ids).to match_array(expected_ids)
       end
@@ -80,6 +87,24 @@ RSpec.describe SleepCyclesLogQuery do
       let(:filters) { { include_followings: true, only_completed: true, order_by: 'duration desc' } }
 
       it "returns current owner's sleep cycles and followed user's history ordered descendingly by sleep duration" do
+        ordered_ids = subject.map(&:id)
+        expected_ids = [
+          @jerry_completed1,
+          @owner_completed2,
+          @owner_completed1,
+          @owner_completed0
+        ].sort_by { |cycle| cycle.duration_miliseconds }
+         .reverse
+         .map(&:id)
+
+        expect(ordered_ids).to match_array(expected_ids)
+      end
+    end
+
+    context "when fetching all followed users's completed sleep cycles history from past week" do
+      let(:filters) { { include_followings: true, only_completed: true, order_by: 'duration desc', since: (Time.zone.now - 7.days) } }
+
+      it "returns completed sleep cycles of current user and it's followed users from 7 days ago to current" do
         ordered_ids = subject.map(&:id)
         expected_ids = [
           @jerry_completed1,
