@@ -195,3 +195,39 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
   ]
 }
 ```
+
+## POST /api/user/sleep_cycles
+
+_Start to sleep and planned wake up time (clock-in)_
+
+** cURL Request Example**
+
+```
+curl --header "Authorization: Bearer {token}" --header "Accept: application/json" --header "Content-Type: application/json" --data "{sleep_cycle:{set_wake_up_time:\"2023-04-15T14:52:27.000Z\"}}" -X POST "http://localhost:3000/api/user/sleep_cycles"
+```
+
+** HTTP 200 Response Example**
+
+```
+{
+  "data": {
+    "attributes": {
+      "actual_wake_up_time": null,
+      "created_at": "2023-04-15T06:52:27.074Z",
+      "duration_miliseconds": null,
+      "set_wake_up_time": "2023-04-15T14:52:27.000Z",
+      "status": "active"
+    },
+    "id": "1",
+    "relationships": {
+      "user": {
+        "data": {
+          "id": "1",
+          "type": "user"
+        }
+      }
+    },
+    "type": "sleep_cycle"
+  }
+}
+```

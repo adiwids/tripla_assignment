@@ -44,10 +44,21 @@ _Test Key_
 bundle exec rspec
 ```
 
-***Run Web Application**
+**Run API Server**
 
 ```
 bundle exec rails s
 ```
 
-Then open `http://localhost:3000` on your browser.
+## Tech Documentations
+
+- [API Documentation](/API_DOCS.md)
+
+## How To
+
+**Generate User Token**
+
+1. Get User ID from `rails console`
+2. Run Rake task `bundle exec rails user:generate_token[{user_id}]`
+   Change `{user_id}` with ID from step 1.
+3. Copy token output from console.
