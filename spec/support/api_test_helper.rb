@@ -6,6 +6,6 @@ module ApiTestHelper
   end
 
   def json_response
-    JSON.parse(response.body)
+    JSON.parse(response.body.presence || {})
   end
 end
