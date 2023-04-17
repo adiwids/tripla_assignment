@@ -354,7 +354,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
         "is_following": false
       },
       "id": "4",
-      "type": "sleep_cycle"
+      "type": "user"
     }
   ]
 }
@@ -413,3 +413,36 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
 **HTTP 204 Response**
 
 _no content_
+
+## GET /api/user/followings
+
+_Returns current user's followed users._
+
+**cURL Example Request**
+
+```
+curl --header "Authorization: Bearer {token}" --header "Accept: application/json" -X GET "http://localhost:3000/api/user/followings"
+```
+
+**HTTP 200 Example Response**
+
+```
+{
+  "data": [
+    {
+      "attributes": {
+        "name": "Tom"
+      },
+      "id": "5",
+      "type": "user"
+    },
+    {
+      "attributes": {
+        "name": "Bella"
+      },
+      "id": "4",
+      "type": "user"
+    }
+  ]
+}
+```
