@@ -45,6 +45,18 @@ module Api
       end
     end
 
+    def followers
+      @followers = @current_user.followers
+      options = {
+        is_collection: true,
+        params: { followed_ids: @current_user.followings.map(&:id) }
+      }.freeze
+
+      respond_to do |format|
+        format.json { render json: UserSerializer.new(@followers, options) }
+      end
+    end
+
     private
 
     def find_target_user
