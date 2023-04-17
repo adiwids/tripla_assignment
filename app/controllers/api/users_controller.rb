@@ -37,6 +37,14 @@ module Api
       end
     end
 
+    def followings
+      @followed_users = @current_user.followings
+
+      respond_to do |format|
+        format.json { render json: UserSerializer.new(@followed_users, is_collection: true) }
+      end
+    end
+
     private
 
     def find_target_user

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       resources :sleep_cycles, only: %i[index create] do
         put '/', to: 'sleep_cycles#update', on: :collection
       end
+      get '/followings', to: 'users#followings'
     end
     resources :users, only: :index do
       resources :sleep_cycles, only: :index

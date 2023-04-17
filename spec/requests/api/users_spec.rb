@@ -176,4 +176,48 @@ RSpec.describe "Users", type: :request do
       end
     end
   end
+
+  describe 'GET /api/user/followings' do
+    let(:subject) do
+      get '/api/user/followings', headers: { 'Authorization' => "Bearer #{token}", 'Accept' => 'application/json' }
+    end
+
+    context 'with authenticated access' do
+      context 'when no followed user yet' do
+        it 'returns success response with empty data' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:ok)
+            expect(json_response['data']).to be_empty
+          end
+        end
+      end
+
+      context 'when already followed other user' do
+        before do
+          @relation = FactoryBot.create(:following, :approved, follower: current_user)
+          @unapproved_relation = FactoryBot.create(:following, :requested, follower: current_user)
+        end
+
+        it 'returns list of users who approved following request' do
+          stub_authenticated_token(token, current_user) do
+            subject
+            expect(response).to have_http_status(:ok)
+            data = json_response['data']
+            expect(data.size).to eql(1)
+            expect(data.first.keys).to match_array(%w[id type attributes])
+            expect(data.map { |datum| datum['id'] }).not_to include(@unapproved_relation.followed_id)
+          end
+        end
+      end
+    end
+
+    context 'with unauthenticated access' do
+      it 'returns error response' do
+        subject
+        expect(response).to have_http_status(:unauthorized)
+        expect(json_response.keys).to match_array(%w[message])
+      end
+    end
+  end
 end
