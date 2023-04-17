@@ -27,7 +27,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
       "attributes": {
         "actual_wake_up_time": null,
         "created_at": "2023-04-15T05:09:57.841Z",
-        "duration_miliseconds": 0,
+        "duration_seconds": 0,
         "set_wake_up_time": "2023-04-15T13:09:57.840Z",
         "status": "inactive"
       },
@@ -46,7 +46,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
       "attributes": {
         "actual_wake_up_time": null,
         "created_at": "2023-04-15T05:09:57.836Z",
-        "duration_miliseconds": 0,
+        "duration_seconds": 0,
         "set_wake_up_time": "2023-04-15T13:09:57.835Z",
         "status": "active"
       },
@@ -65,7 +65,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
       "attributes": {
         "actual_wake_up_time": "2023-04-14T12:09:57.000Z",
         "created_at": "2023-04-14T05:09:57.000Z",
-        "duration_miliseconds": 18000,
+        "duration_seconds": 18000,
         "set_wake_up_time": "2023-04-14T13:09:57.000Z",
         "status": "inactive"
       },
@@ -102,7 +102,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
     {
       "attributes": {
         "actual_wake_up_time": "2023-04-14T12:05:39.000Z",
-        "duration_miliseconds": 21600,
+        "duration_seconds": 21600,
         "set_wake_up_time": "2023-04-14T13:05:39.000Z",
         "status": "inactive"
       },
@@ -120,7 +120,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
     {
       "attributes": {
         "actual_wake_up_time": "2023-04-14T12:05:39.000Z",
-        "duration_miliseconds": 18000,
+        "duration_seconds": 18000,
         "set_wake_up_time": "2023-04-14T13:05:39.000Z",
         "status": "inactive"
       },
@@ -157,7 +157,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
     {
       "attributes": {
         "actual_wake_up_time": "2023-04-14T12:05:39.000Z",
-        "duration_miliseconds": 21600,
+        "duration_seconds": 21600,
         "set_wake_up_time": "2023-04-14T13:05:39.000Z",
         "status": "inactive"
       },
@@ -175,7 +175,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
     {
       "attributes": {
         "actual_wake_up_time": "2023-04-14T12:05:39.000Z",
-        "duration_miliseconds": 18000,
+        "duration_seconds": 18000,
         "set_wake_up_time": "2023-04-14T13:05:39.000Z",
         "status": "inactive"
       },
@@ -213,7 +213,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
       "attributes": {
         "actual_wake_up_time": "2023-04-14T12:12:41.000Z",
         "created_at": "2023-04-14T05:12:41.000Z",
-        "duration_miliseconds": 14400,
+        "duration_seconds": 14400,
         "set_wake_up_time": "2023-04-14T13:12:41.000Z",
         "status": "inactive"
       },
@@ -232,7 +232,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
       "attributes": {
         "actual_wake_up_time": null,
         "created_at": "2023-04-15T05:12:41.900Z",
-        "duration_miliseconds": 0,
+        "duration_seconds": 0,
         "set_wake_up_time": "2023-04-15T13:12:41.900Z",
         "status": "active"
       },
@@ -269,7 +269,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
     "attributes": {
       "actual_wake_up_time": null,
       "created_at": "2023-04-15T06:52:27.074Z",
-      "duration_miliseconds": null,
+      "duration_seconds": null,
       "set_wake_up_time": "2023-04-15T14:52:27.000Z",
       "status": "active"
     },
@@ -305,7 +305,7 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
     "attributes": {
       "actual_wake_up_time": "2023-04-15T14:52:27.000Z",
       "created_at": "2023-04-15T06:52:27.074Z",
-      "duration_miliseconds": 218000,
+      "duration_seconds": 218000,
       "set_wake_up_time": "2023-04-15T14:52:27.000Z",
       "status": "inactive"
     },

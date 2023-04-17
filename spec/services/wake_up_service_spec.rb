@@ -21,7 +21,7 @@ RSpec.describe WakeUpService, type: :service do
 
         it 'calculates sleep duration in miliseconds' do
           expected_duration = (actual_wake_up_time - object.created_at).to_i
-          expect { subject }.to change { object.duration_miliseconds }.from(0).to(expected_duration)
+          expect { subject }.to change { object.duration_seconds }.from(0).to(expected_duration)
         end
 
         it 'deactivates cycle' do

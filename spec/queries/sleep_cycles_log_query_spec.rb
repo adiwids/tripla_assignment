@@ -93,7 +93,7 @@ RSpec.describe SleepCyclesLogQuery do
           @owner_completed2,
           @owner_completed1,
           @owner_completed0
-        ].sort_by { |cycle| cycle.duration_miliseconds }
+        ].sort_by { |cycle| cycle.duration_seconds }
          .reverse
          .map(&:id)
 
@@ -110,7 +110,7 @@ RSpec.describe SleepCyclesLogQuery do
           @jerry_completed1,
           @owner_completed2,
           @owner_completed1
-        ].sort_by { |cycle| cycle.duration_miliseconds }
+        ].sort_by { |cycle| cycle.duration_seconds }
          .reverse
          .map(&:id)
 

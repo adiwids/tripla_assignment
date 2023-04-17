@@ -3,7 +3,7 @@ class SleepCycleSerializer
 
   attributes :set_wake_up_time,
              :actual_wake_up_time,
-             :duration_miliseconds,
+             :duration_seconds,
              :status,
              :created_at
 

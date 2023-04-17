@@ -43,7 +43,7 @@ class SleepCyclesLogQuery
     column, direction = filters[:order_by].to_s.split(/\s/, 2)
     case column
     when 'duration'
-      "sleep_cycles.duration_miliseconds #{direction}"
+      "sleep_cycles.duration_seconds #{direction}"
     else
       'sleep_cycles.id asc'
     end

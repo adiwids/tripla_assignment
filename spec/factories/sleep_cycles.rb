@@ -4,7 +4,7 @@ FactoryBot.define do
     date { Time.zone.now.to_date }
     set_wake_up_time { Time.zone.now + 8.hours }
     actual_wake_up_time { nil }
-    duration_miliseconds { 0 }
+    duration_seconds { 0 }
 
     inactive
 
@@ -19,7 +19,7 @@ FactoryBot.define do
     trait :waken_up do
       empty_inactive
       actual_wake_up_time { Time.zone.now + 7.hours }
-      duration_miliseconds { (4..7).to_a.sample.hours.to_i }
+      duration_seconds { (4..7).to_a.sample.hours.to_i }
     end
 
     trait :inactive do

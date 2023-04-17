@@ -25,7 +25,7 @@ class WakeUpService
     if valid_wake_up_time?(actual_wake_up_datetime)
       attributes = {
         actual_wake_up_time: actual_wake_up_datetime,
-        duration_miliseconds: calculate_duration(actual_wake_up_datetime)
+        duration_seconds: calculate_duration(actual_wake_up_datetime)
       }
       object.inactive! if object.update(attributes)
     end
