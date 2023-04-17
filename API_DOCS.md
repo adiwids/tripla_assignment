@@ -414,6 +414,41 @@ curl --header "Authorization: Bearer {token}" --header "Accept: application/json
 
 _no content_
 
+## GET /api/user/followers
+
+_Returns current user's followers._
+
+**cURL Example Request**
+
+```
+curl --header "Authorization: Bearer {token}" --header "Accept: application/json" -X GET "http://localhost:3000/api/user/followers"
+```
+
+**HTTP 200 Example Response**
+
+```
+{
+  "data": [
+    {
+      "attributes": {
+        "name": "Tom",
+        "is_followed": true
+      },
+      "id": "5",
+      "type": "user"
+    },
+    {
+      "attributes": {
+        "name": "Bella",
+        "is_followed": false
+      },
+      "id": "4",
+      "type": "user"
+    }
+  ]
+}
+```
+
 ## GET /api/user/followings
 
 _Returns current user's followed users._
