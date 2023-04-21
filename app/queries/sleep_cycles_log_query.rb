@@ -13,13 +13,12 @@ class SleepCyclesLogQuery
   def fetch(filters: {})
     query = filters[:only_completed] ? collection.completed : collection
     query = query.reorder(order_by(filters)) if filters[:order_by]
-    owner_sleep_cycles = query.distinct.where(sleep_cycles: { user_id: owner.id })
 
     query = if filters[:include_followings]
       query.distinct.joins(followed_users_including_owner_join_sql)
-                    .or(owner_sleep_cycles)
+                    .where("sleep_cycles.user_id = :user_id OR followed_users.follower_id = :user_id", user_id: owner.id)
     else
-      owner_sleep_cycles
+      query.where(sleep_cycles: { user_id: owner.id })
     end
 
     query = query.where('sleep_cycles.created_at >= ?', filters[:since]) if filters[:since]
@@ -31,11 +30,9 @@ class SleepCyclesLogQuery
 
   def followed_users_including_owner_join_sql
     <<-SQL
-      INNER JOIN (
-        #{owner.follow_relations.approved.select(:follower_id, :followed_id).to_sql}
-      ) AS followed_users
-        ON followed_users.followed_id = sleep_cycles.user_id
-          OR followed_users.follower_id = sleep_cycles.user_id
+      LEFT OUTER JOIN (
+        #{Following.approved.select(:follower_id, :followed_id).to_sql}
+      ) AS followed_users ON followed_users.followed_id = sleep_cycles.user_id
     SQL
   end
 
