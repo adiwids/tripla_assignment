@@ -6,7 +6,9 @@ RSpec.describe "Sleep Cycles", type: :request do
 
   describe "GET /api/user/sleep_cycles" do
     let(:subject) do
-      get "/api/user/sleep_cycles", headers: { 'Accept' => 'application/json', 'Authorization' => "Bearer #{token}" }
+      get "/api/user/sleep_cycles",
+          headers: { 'Accept' => 'application/json', 'Authorization' => "Bearer #{token}" },
+          params: { page: { size: 10 } }
     end
     let(:jerry) { FactoryBot.create(:jerry) }
 
@@ -35,6 +37,7 @@ RSpec.describe "Sleep Cycles", type: :request do
           stub_authenticated_token(token, current_user) do
             subject
             expect(response).to have_http_status(:ok)
+            expect(json_response.keys).to match_array(%w[data meta links])
             data = json_response['data']
             expect(data.size).to eq(4)
             expect(data.first.keys).to match_array(%w[id type attributes relationships])
@@ -48,7 +51,7 @@ RSpec.describe "Sleep Cycles", type: :request do
       context "fetching current user and it's followed users's sleep cycles history ranked by duration" do
         let(:subject) do
           get "/api/user/sleep_cycles",
-              params: { only_completed: true, include_followings: true, order_by: 'duration desc' },
+              params: { only_completed: true, include_followings: true, order_by: 'duration desc', page: { size: 10 } },
               headers: { 'Accept' => 'application/json', 'Authorization' => "Bearer #{token}" }
         end
 
@@ -65,7 +68,7 @@ RSpec.describe "Sleep Cycles", type: :request do
       context "fetching current user and it's followed users's sleep cycles history ranked by duration since past week" do
         let(:subject) do
           get "/api/user/sleep_cycles",
-              params: { only_completed: true, include_followings: true, order_by: 'duration desc', since: (Time.zone.now - 7.days).iso8601 },
+              params: { only_completed: true, include_followings: true, order_by: 'duration desc', since: (Time.zone.now - 7.days).iso8601, page: { size: 10 } },
               headers: { 'Accept' => 'application/json', 'Authorization' => "Bearer #{token}" }
         end
 
@@ -91,7 +94,9 @@ RSpec.describe "Sleep Cycles", type: :request do
 
   describe "GET /api/users/:user_id/sleep_cycles" do
     let(:subject) do
-      get "/api/users/#{user.id}/sleep_cycles", headers: { 'Accept' => 'application/json', 'Authorization' => "Bearer #{token}" }
+      get "/api/users/#{user.id}/sleep_cycles",
+          headers: { 'Accept' => 'application/json', 'Authorization' => "Bearer #{token}" },
+          params: { page: { size: 10 } }
     end
     let(:user) { FactoryBot.create(:jerry) }
 

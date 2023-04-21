@@ -5,7 +5,7 @@ module Api
 
       respond_to do |format|
         format.json do
-          render json: SleepCycleSerializer.new(@sleep_cycles, is_collection: true)
+          render json: paginate(@sleep_cycles, SleepCycleSerializer)
         end
       end
     end
@@ -49,7 +49,7 @@ module Api
     end
 
     def index_params
-      params.permit(:include_followings, :only_completed, :order_by)
+      params.permit(:include_followings, :only_completed, :order_by, page: [:size, :number])
     end
 
     def create_params
