@@ -76,3 +76,6 @@ end
 
 gem "json-jwt", "~> 1.16"
 gem "jsonapi-serializer", "~> 2.2"
+gem "pagy", "~> 4.0"
+# requires Pagy v4.x, > 4 is not supported yet
+gem "jsom-pagination", "~> 0.2.0"
