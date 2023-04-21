@@ -5,7 +5,7 @@ module Api
 
       respond_to do |format|
         format.json do
-          render json: paginate(@sleep_cycles, SleepCycleSerializer)
+          render json: paginate(@sleep_cycles, SleepCycleSerializer, params: { current_user_id: @current_user.id })
         end
       end
     end
@@ -17,7 +17,7 @@ module Api
       respond_to do |format|
         format.json do
           if @sleep_cycle.errors.empty?
-            render json: SleepCycleSerializer.new(@sleep_cycle)
+            render json: SleepCycleSerializer.new(@sleep_cycle, params: { current_user_id: @current_user.id })
           else
             render json: { message: @sleep_cycle.errors.full_messages.first }, status: :unprocessable_entity
           end
@@ -32,7 +32,7 @@ module Api
       respond_to do |format|
         format.json do
           if @sleep_cycle.errors.empty?
-            render json: SleepCycleSerializer.new(@sleep_cycle)
+            render json: SleepCycleSerializer.new(@sleep_cycle, params: { current_user_id: @current_user.id })
           else
             render json: { message: @sleep_cycle.errors.full_messages.first }, status: :unprocessable_entity
           end

@@ -43,7 +43,7 @@ RSpec.describe "Sleep Cycles", type: :request do
             expect(data.first.keys).to match_array(%w[id type attributes relationships])
             expect(data.first['type']).to eq('sleep_cycle')
             expect(data.first['attributes'].keys).to match_array(%w[set_wake_up_time actual_wake_up_time duration_seconds status created_at])
-            expect(data.first['relationships'].keys).to include('user')
+            expect(data.first['relationships'].keys).not_to include('user')
           end
         end
       end
@@ -190,7 +190,7 @@ RSpec.describe "Sleep Cycles", type: :request do
             expect(data.keys).to match_array(%w[id type attributes relationships])
             expect(data['type']).to eq('sleep_cycle')
             expect(data['attributes'].keys).to match_array(%w[set_wake_up_time actual_wake_up_time duration_seconds status created_at])
-            expect(data['relationships'].keys).to include('user')
+            expect(data['relationships'].keys).not_to include('user')
           end
         end
       end
@@ -301,7 +301,7 @@ RSpec.describe "Sleep Cycles", type: :request do
             expect(data.keys).to match_array(%w[id type attributes relationships])
             expect(data['type']).to eq('sleep_cycle')
             expect(data['attributes'].keys).to match_array(%w[set_wake_up_time actual_wake_up_time duration_seconds status created_at])
-            expect(data['relationships'].keys).to include('user')
+            expect(data['relationships'].keys).not_to include('user')
             expect(data['attributes']['actual_wake_up_time']).to eq(DateTime.parse(actual_wake_up_time).in_time_zone('UTC').iso8601(3))
             expect(data['attributes']['duration_seconds']).not_to be_zero
           end

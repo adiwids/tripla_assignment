@@ -7,5 +7,5 @@ class SleepCycleSerializer
              :status,
              :created_at
 
-  belongs_to :user
+  belongs_to :user, if: Proc.new { |object, params| params && params.dig(:current_user_id) != object.user_id }
 end
