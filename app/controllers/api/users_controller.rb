@@ -9,7 +9,7 @@ module Api
 
       respond_to do |format|
         format.json do
-          render json: paginate(@users, UserSerializer, params: { followed_ids: followed_ids, follower_ids: follower_ids })
+          render json: paginate(@users, UserSerializer, params: { followed_ids: followed_ids, follower_ids: follower_ids, current_user_id: @current_user.id })
         end
       end
     end
@@ -20,7 +20,7 @@ module Api
 
       respond_to do |format|
         format.json do
-          render json: FollowingSerializer.new(@relation), status: service.new_relation? ? :ok : :no_content
+          render json: FollowingSerializer.new(@relation, params: { current_user_id: @current_user.id }), status: service.new_relation? ? :ok : :no_content
         end
       end
     end

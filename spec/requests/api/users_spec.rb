@@ -57,7 +57,7 @@ RSpec.describe "Users", type: :request do
             expect(data.keys).to match_array(%w[id type attributes relationships])
             expect(data['type']).to eq('following')
             expect(data['attributes'].keys).to match_array(%w[status created_at updated_at])
-            expect(data['relationships'].keys).to match_array(%w[followed follower])
+            expect(data['relationships'].keys).to match_array(%w[followed])
             expect(data['relationships']['followed']['data']['type']).to eq('user')
           end
         end
