@@ -6,14 +6,10 @@ module Api
       @users = User.where.not(id: @current_user.id)
       followed_ids = @current_user.followings.map(&:id)
       follower_ids = @current_user.followers.map(&:id)
-      options = {
-        is_collection: true,
-        params: { followed_ids: followed_ids, follower_ids: follower_ids }
-      }.freeze
 
       respond_to do |format|
         format.json do
-          render json: UserSerializer.new(@users, options)
+          render json: paginate(@users, UserSerializer, params: { followed_ids: followed_ids, follower_ids: follower_ids })
         end
       end
     end
@@ -41,19 +37,17 @@ module Api
       @followed_users = @current_user.followings
 
       respond_to do |format|
-        format.json { render json: UserSerializer.new(@followed_users, is_collection: true) }
+        format.json { render json: paginate(@followed_users, UserSerializer) }
       end
     end
 
     def followers
       @followers = @current_user.followers
-      options = {
-        is_collection: true,
-        params: { followed_ids: @current_user.followings.map(&:id) }
-      }.freeze
 
       respond_to do |format|
-        format.json { render json: UserSerializer.new(@followers, options) }
+        format.json do
+          render json: paginate(@followers, UserSerializer, params: { followed_ids: @current_user.followings.map(&:id) })
+        end
       end
     end
 

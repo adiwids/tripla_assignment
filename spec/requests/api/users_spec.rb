@@ -6,7 +6,9 @@ RSpec.describe "Users", type: :request do
 
   describe 'GET /api/users' do
     let(:subject) do
-      get '/api/users', headers: { 'Authorization' => "Bearer #{token}", 'Accept' => 'application/json' }
+      get '/api/users',
+          headers: { 'Authorization' => "Bearer #{token}", 'Accept' => 'application/json' },
+          params: { page: { size: 10 } }
     end
 
     before { FactoryBot.create_list(:user, 2) }
@@ -16,6 +18,7 @@ RSpec.describe "Users", type: :request do
         stub_authenticated_token(token, current_user) do
           subject
           expect(response).to have_http_status(:ok)
+          expect(json_response.keys).to match_array(%w[data meta links])
           data = json_response['data']
           expect(data).to be_any
           expect(data.first.keys).to match_array(%w[id type attributes])
@@ -179,7 +182,9 @@ RSpec.describe "Users", type: :request do
 
   describe 'GET /api/user/followings' do
     let(:subject) do
-      get '/api/user/followings', headers: { 'Authorization' => "Bearer #{token}", 'Accept' => 'application/json' }
+      get '/api/user/followings',
+          headers: { 'Authorization' => "Bearer #{token}", 'Accept' => 'application/json' },
+          params: { page: { size: 10 } }
     end
 
     context 'with authenticated access' do
@@ -223,7 +228,9 @@ RSpec.describe "Users", type: :request do
 
   describe 'GET /api/user/followers' do
     let(:subject) do
-      get '/api/user/followers', headers: { 'Authorization' => "Bearer #{token}", 'Accept' => 'application/json' }
+      get '/api/user/followers',
+          headers: { 'Authorization' => "Bearer #{token}", 'Accept' => 'application/json' },
+          params: { page: { size: 10 } }
     end
     let(:jerry) { FactoryBot.create(:jerry) }
 
