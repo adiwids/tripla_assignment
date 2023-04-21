@@ -12,6 +12,9 @@ module Api::PaginatedCollection
   end
 
   def page_params
+    # avoid to return HTTP 400 when client doesn't set pagination parameter
+    return {} unless params.key?(:page)
+
     params.require(:page).permit(:size, :number)
   end
 
