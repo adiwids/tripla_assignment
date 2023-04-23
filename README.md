@@ -4,6 +4,7 @@
 
 * Ruby 3.2
 * SQLite3
+* Memcached
 
 _Project initialized by command_
 
@@ -35,8 +36,9 @@ _Test Key_
 3. `touch config/master.key && echo "a8c7cf7a96525ead70b37e51679cbb8b" > config/master.key`
 4. `touch config/credentials/development.key && echo "7ce997a0e3ac9e8cfc742b63d370713b" > config/credentials/development.key`
 5. `touch config/credentials/test.key && echo "4a4cb881d2e4ee19bd61099684806227" > config/credentials/test.key`
-6. `bundle install && yarn install`
-7. `bundle exec rails db:setup`
+6. `cp .env.example .env.development.local` and set `MEMCACHE_SERVERS` IP address(es) and port separated with comma for multiple servers. In this example is `127.0.0.1:11211` exposed memcache docker address and port.
+7. `bundle install && yarn install`
+8. `bundle exec rails db:setup`
 
 **Run Tests**
 
@@ -48,6 +50,12 @@ bundle exec rspec
 
 ```
 bundle exec rails s
+```
+
+**Run Memcached Server (Docker)**
+
+```
+docker run --env=MEMCACHED_VERSION=1.6.19 -p 11211:11211 -d memcached:latest
 ```
 
 ## Tech Documentations
